@@ -1,0 +1,59 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function autenticato() {
+      return request.auth != null;
+    }
+
+    function proprietario(uid) {
+      return autenticato() && request.auth.uid == uid;
+    }
+
+    function ruoloDi(uid) {
+      return get(/databases/$(database)/documents/users/$(uid)).data.ruolo;
+    }
+
+    function isAdmin() {
+      return autenticato()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && ruoloDi(request.auth.uid) == 'admin';
+    }
+
+    match /users/{uid} {
+
+      // L'utente vede se stesso, l'admin vede tutti.
+      allow get: if proprietario(uid) || isAdmin();
+      allow list: if isAdmin();
+
+      // In registrazione si nasce sempre "user" con credito a zero:
+      // solo un amministratore puo' promuovere o assegnare credito.
+      allow create: if proprietario(uid)
+        && request.resource.data.ruolo == 'user'
+        && request.resource.data.creditoResiduo == 0;
+
+      // L'utente aggiorna i propri dati ma non puo' cambiare ruolo
+      // ne' aumentare il proprio credito (puo' solo consumarlo).
+      allow update: if isAdmin() || (
+        proprietario(uid)
+        && request.resource.data.ruolo == resource.data.ruolo
+        && request.resource.data.creditoResiduo <= resource.data.creditoResiduo
+      );
+
+      allow delete: if isAdmin();
+
+      // Attivita' selezionate dall'utente.
+      match /selections/{attivitaId} {
+        allow read, write: if proprietario(uid) || isAdmin();
+      }
+    }
+
+    match /activities/{attivitaId} {
+      // Tutti gli utenti autenticati leggono il catalogo,
+      // solo l'admin lo crea, modifica ed elimina.
+      allow read: if autenticato();
+      allow create, update, delete: if isAdmin();
+    }
+  }
+}
