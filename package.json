@@ -13,7 +13,7 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "start": "node scripts/serve-statico.mjs",
-    "emulators": "firebase emulators:start --only auth,firestore,storage --project demo-welfare",
+    "emulators": "node node_modules/firebase-tools/lib/bin/firebase.js emulators:start --only auth,firestore,storage --project demo-welfare",
     "seed": "node scripts/seed-emulatori.mjs"
   },
   "dependencies": {

@@ -276,6 +276,14 @@ wrapper di npm. Due strade:
 Il comando e' stato lanciato fuori dalla cartella del progetto: entra prima con
 `cd` nella cartella che contiene `package.json`.
 
+**`"firebase" non e' riconosciuto come comando`**
+
+Significa che `npm install` non e' arrivato in fondo: `firebase-tools` e' una
+dipendenza di sviluppo del progetto, non un programma da installare a parte.
+Controlla con `dir node_modules\firebase-tools` (Windows) o
+`ls node_modules/firebase-tools`; se la cartella manca rilancia `npm install`
+dalla cartella del progetto e leggi le ultime righe dell'output.
+
 **`npm run emulators` si ferma con un errore su Java**
 
 Gli emulatori Firestore e Storage girano sulla JVM: installa Java con
