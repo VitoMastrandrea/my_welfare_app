@@ -93,10 +93,18 @@ viene realmente inviato e nessun dato esce dal tuo computer.
 
 ```bash
 npm install
-cp .env.example .env          # lascia i campi vuoti, metti VITE_USE_EMULATORS=true
-npm run emulators             # terminale 1: auth, firestore e storage locali
-npm run dev                   # terminale 2: app su http://localhost:5173
+npm run emulators        # terminale 1: auth, firestore e storage locali
+npm run dev:emulatori    # terminale 2: app su http://localhost:5173
 ```
+
+`dev:emulatori` usa il file versionato `.env.emulatori`: per la prova in locale
+non serve creare ne' modificare alcun `.env`. Su Windows apri semplicemente due
+finestre del Prompt dei comandi, una per ciascun comando.
+
+**Prerequisiti**: oltre a Node serve **Java 11+**, richiesto dagli emulatori
+Firestore e Storage (`winget install Microsoft.OpenJDK.21` su Windows,
+`brew install openjdk` su macOS). Senza Java `npm run emulators` si ferma
+subito con un errore su Java.
 
 1. Apri http://localhost:5173 e scegli **Registrati**: nome, cognome, codice
    fiscale, e-mail e password.
@@ -226,11 +234,55 @@ altri utenti dalla pagina *Utenti*.
 ```bash
 npm install       # dipendenze
 npm run dev       # sviluppo su http://localhost:5173
+npm run dev:emulatori # sviluppo collegato agli emulatori locali
 npm run emulators # Firebase Auth, Firestore e Storage in locale
 npm run seed      # promuove ad admin il primo utente e crea attivita demo (solo emulatori)
 npm run build     # build di produzione in dist/
 npm run preview   # anteprima della build
+npm start         # serve dist/ come in produzione (porta da PORT, default 3000)
 npm run lint      # analisi statica (oxlint)
+```
+
+---
+
+## Deploy su Railway
+
+L'app e' una SPA statica: Railway la compila e ne serve la cartella `dist/`,
+mentre autenticazione e database restano su Firebase. Nel repo trovi gia'
+`railway.json` (build e start command) e `scripts/serve-statico.mjs`, un server
+statico senza dipendenze con fallback SPA — indispensabile perche' rotte come
+`/admin/utenti`, aperte direttamente, tornino `index.html` invece di un 404.
+
+1. Serve un **progetto Firebase reale**: gli emulatori girano solo in locale.
+   Completa prima la sezione *Configurazione Firebase*.
+2. Su [railway.app](https://railway.app): *New Project* → *Deploy from GitHub
+   repo* → scegli questo repository e il branch da pubblicare.
+3. In *Variables* aggiungi le sei variabili del progetto Firebase:
+
+   ```
+   VITE_FIREBASE_API_KEY, VITE_FIREBASE_AUTH_DOMAIN, VITE_FIREBASE_PROJECT_ID,
+   VITE_FIREBASE_STORAGE_BUCKET, VITE_FIREBASE_MESSAGING_SENDER_ID,
+   VITE_FIREBASE_APP_ID
+   ```
+
+   > **Attenzione**: Vite legge le variabili `VITE_*` durante la **build**, non
+   > all'avvio. Se le aggiungi dopo il primo deploy devi rilanciarlo, altrimenti
+   > l'app resta compilata senza credenziali e mostra "Configurazione mancante".
+   > Non impostare `VITE_USE_EMULATORS`: in produzione deve restare assente.
+
+4. *Settings* → *Networking* → **Generate Domain**: Railway espone il servizio
+   sulla porta della variabile `PORT`, che il server statico legge da solo.
+5. Nella console Firebase, *Authentication* → *Settings* → **Domini autorizzati**:
+   aggiungi il dominio Railway (es. `mio-welfare.up.railway.app`), altrimenti
+   il login con Google viene rifiutato.
+6. Le regole Firestore non passano da Railway: pubblicale a parte con
+   `npx firebase deploy --only firestore:rules,firestore:indexes`.
+
+Per provare la build di produzione in locale, esattamente come gira su Railway:
+
+```bash
+npm run build
+npm start          # http://localhost:3000
 ```
 
 ---

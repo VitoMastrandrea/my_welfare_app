@@ -395,8 +395,13 @@ export function LoginPage() {
           <h1 className="md-headline-small" style={{ margin: 0 }}>Configurazione mancante</h1>
           <BannerErrore testo="Le credenziali Firebase non sono state impostate." />
           <p className="md-body-medium" style={{ margin: 0 }}>
-            Copia il file <code>.env.example</code> in <code>.env</code>, inserisci i valori del tuo
-            progetto Firebase e riavvia il server di sviluppo. Le istruzioni complete sono nel README.
+            In locale: copia <code>.env.example</code> in <code>.env</code>, inserisci i valori del
+            tuo progetto Firebase e riavvia il server di sviluppo.
+          </p>
+          <p className="md-body-medium" style={{ margin: 0 }}>
+            In produzione (Railway, Firebase Hosting, ...): le variabili <code>VITE_*</code> vengono
+            lette durante la <strong>build</strong>, non all avvio. Impostale nel servizio e rilancia
+            il deploy. Le istruzioni complete sono nel README.
           </p>
         </div>
       </main>

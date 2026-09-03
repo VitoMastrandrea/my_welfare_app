@@ -8,9 +8,11 @@
   },
   "scripts": {
     "dev": "vite",
+    "dev:emulatori": "vite --mode emulatori",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
+    "start": "node scripts/serve-statico.mjs",
     "emulators": "firebase emulators:start --only auth,firestore,storage --project demo-welfare",
     "seed": "node scripts/seed-emulatori.mjs"
   },
