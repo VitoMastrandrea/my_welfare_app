@@ -85,7 +85,10 @@ calcolo benefit, foto profilo, traduzione errori Firebase).
 
 ### A. Prova in locale in 5 minuti (senza progetto Firebase)
 
-Serve solo Node 20+. Tutto gira sugli emulatori Firebase: nessun SMS o e-mail
+Serve **Node.js 20.19+ oppure 22.12+** (consigliata la LTS 22.x): npm e' incluso
+nell'installazione di Node, non va installato a parte. Su Windows:
+`winget install OpenJS.NodeJS.LTS`, poi riapri il prompt e controlla con
+`node -v` e `npm -v`. Tutto gira sugli emulatori Firebase: nessun SMS o e-mail
 viene realmente inviato e nessun dato esce dal tuo computer.
 
 ```bash
