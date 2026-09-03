@@ -123,6 +123,12 @@ sono piu' supportate da firebase-tools 15.
    i  To verify the phone number +393401234567, use the code 564715.
    ```
 
+   Nessun SMS viene realmente inviato: con gli emulatori il codice esiste solo
+   qui. Se la riga e' scorsa via, aprilo nel browser da
+   http://127.0.0.1:9099/emulator/v1/projects/demo-welfare/verificationCodes
+   (l'ultimo elemento della lista e' il piu' recente). Stessa cosa per i link di
+   verifica dell'e-mail, elencati su `.../oobCodes`.
+
    Confermalo e sei nella dashboard.
 4. Il primo utente nasce come `user` con credito 0. Per renderlo amministratore
    e popolare il catalogo:
