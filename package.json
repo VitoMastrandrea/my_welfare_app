@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "emulators": "firebase emulators:start --only auth,firestore,storage --project demo-welfare"
+    "emulators": "firebase emulators:start --only auth,firestore,storage --project demo-welfare",
+    "seed": "node scripts/seed-emulatori.mjs"
   },
   "dependencies": {
     "firebase": "^12.18.0",
@@ -21,6 +22,7 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^6.1.0",
+    "firebase-tools": "^15.29.0",
     "oxlint": "^1.79.0",
     "typescript": "~6.0.2",
     "vite": "^8.2.2"

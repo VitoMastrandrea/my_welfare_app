@@ -81,6 +81,82 @@ calcolo benefit, foto profilo, traduzione errori Firebase).
 
 ---
 
+## Come si usa
+
+### A. Prova in locale in 5 minuti (senza progetto Firebase)
+
+Serve solo Node 20+. Tutto gira sugli emulatori Firebase: nessun SMS o e-mail
+viene realmente inviato e nessun dato esce dal tuo computer.
+
+```bash
+npm install
+cp .env.example .env          # lascia i campi vuoti, metti VITE_USE_EMULATORS=true
+npm run emulators             # terminale 1: auth, firestore e storage locali
+npm run dev                   # terminale 2: app su http://localhost:5173
+```
+
+1. Apri http://localhost:5173 e scegli **Registrati**: nome, cognome, codice
+   fiscale, e-mail e password.
+2. L'app chiede di **confermare l'e-mail**. Il link non arriva davvero: aprilo
+   dai log del terminale degli emulatori (riga `To verify the email address...`)
+   oppure dalla Emulator UI su http://127.0.0.1:4000/auth. Poi premi
+   *Ho verificato l e-mail*.
+3. Inserisci un numero in formato internazionale (es. `+393401234567`) per la
+   **verifica in due passaggi**: il codice a 6 cifre compare nei log degli
+   emulatori. Confermalo e sei nella dashboard.
+4. Il primo utente nasce come `user` con credito 0. Per renderlo amministratore
+   e popolare il catalogo:
+
+   ```bash
+   npm run seed
+   ```
+
+   Promuove ad ADMIN il primo utente registrato, gli accredita 500 euro e crea
+   tre attivita' di esempio (lezione, abbonamento, voucher). Ricarica la pagina.
+
+### B. Uso con un progetto Firebase reale
+
+Segui la sezione *Configurazione Firebase* qui sotto, poi compila `.env` con
+`VITE_USE_EMULATORS=false` e i valori del tuo progetto. In produzione il primo
+amministratore si promuove dalla console (Firestore → `users` → il tuo documento
+→ `ruolo` = `admin`): `npm run seed` funziona solo con gli emulatori.
+
+Per pubblicare l'app:
+
+```bash
+npm run build
+npx firebase deploy --only hosting,firestore:rules,firestore:indexes
+```
+
+### C. Percorso d'uso tipico
+
+**Come ADMIN**
+
+1. Dashboard → pulsante **Attivita** → FAB `+` per creare il catalogo. Per ogni
+   attivita': nome (unico), descrizione, tipologia (lezione / voucher /
+   abbonamento), costo unitario e limite per utente (`0` = illimitato).
+   Toccando una riga compaiono le tre icone: matita (modifica tutto),
+   pattumiera (elimina), dollaro (cambia solo il costo).
+2. Dashboard → pulsante **Utenti** → tocca un utente per far comparire le tre
+   icone: matita (dati anagrafici e ruolo), pattumiera (elimina), dollaro
+   (**Ricarica** aggiunge credito, **Imposta saldo** lo sostituisce).
+3. Da qui promuovi altri colleghi ad `admin` e assegni il welfare annuale.
+
+**Come USER**
+
+1. **I miei dati** → compila la situazione familiare (stato civile, figli,
+   familiari a carico, ISEE, anzianita'): l'app calcola in tempo reale il
+   livello di benefit 1-5 e il plafond teorico.
+2. FAB `+` **Scegli attivita** → il pulsante `+` di ogni riga incrementa il
+   contatore e scala subito il saldo previsto. Se il credito non basta o si
+   supera il limite per utente compare un messaggio rosso e la selezione viene
+   bloccata.
+3. **CONFERMA** scala il credito in transazione e le attivita' compaiono nella
+   dashboard; **CANCELLA** annulla tutto.
+4. La foto profilo si cambia cliccandoci sopra, direttamente dalla dashboard.
+
+---
+
 ## Flusso di accesso (Pagina 1)
 
 ```
@@ -145,11 +221,13 @@ altri utenti dalla pagina *Utenti*.
 ## Comandi
 
 ```bash
-npm install     # dipendenze
-npm run dev     # sviluppo su http://localhost:5173
-npm run build   # build di produzione in dist/
-npm run preview # anteprima della build
-npm run lint    # analisi statica (oxlint)
+npm install       # dipendenze
+npm run dev       # sviluppo su http://localhost:5173
+npm run emulators # Firebase Auth, Firestore e Storage in locale
+npm run seed      # promuove ad admin il primo utente e crea attivita demo (solo emulatori)
+npm run build     # build di produzione in dist/
+npm run preview   # anteprima della build
+npm run lint      # analisi statica (oxlint)
 ```
 
 ---
