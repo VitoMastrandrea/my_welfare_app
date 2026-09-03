@@ -108,13 +108,22 @@ sono piu' supportate da firebase-tools 15.
 
 1. Apri http://localhost:5173 e scegli **Registrati**: nome, cognome, codice
    fiscale, e-mail e password.
-2. L'app chiede di **confermare l'e-mail**. Il link non arriva davvero: aprilo
-   dai log del terminale degli emulatori (riga `To verify the email address...`)
-   oppure dalla Emulator UI su http://127.0.0.1:4000/auth. Poi premi
-   *Ho verificato l e-mail*.
+2. L'app chiede di **confermare l'e-mail**. Il messaggio non parte davvero: nel
+   terminale degli emulatori compare la riga
+
+   ```
+   i  To verify the email address tuo@indirizzo, follow this link: http://127.0.0.1:9099/emulator/action?mode=verifyEmail&...
+   ```
+
+   Aprila nel browser, torna sull'app e premi *Ho verificato l e-mail*.
 3. Inserisci un numero in formato internazionale (es. `+393401234567`) per la
-   **verifica in due passaggi**: il codice a 6 cifre compare nei log degli
-   emulatori. Confermalo e sei nella dashboard.
+   **verifica in due passaggi**. Il codice compare nello stesso terminale:
+
+   ```
+   i  To verify the phone number +393401234567, use the code 564715.
+   ```
+
+   Confermalo e sei nella dashboard.
 4. Il primo utente nasce come `user` con credito 0. Per renderlo amministratore
    e popolare il catalogo:
 
