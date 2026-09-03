@@ -245,6 +245,49 @@ npm run lint      # analisi statica (oxlint)
 
 ---
 
+## Problemi comuni su Windows
+
+**`npm : Impossibile caricare il file ...\npm.ps1. L'esecuzione di script e' disabilitata`**
+
+PowerShell blocca per impostazione predefinita gli script `.ps1`, incluso il
+wrapper di npm. Due strade:
+
+- senza cambiare nulla nel sistema, usa l'eseguibile `.cmd` (oppure il classico
+  Prompt dei comandi, dove il problema non si presenta):
+
+  ```powershell
+  npm.cmd install
+  npm.cmd run dev:emulatori
+  ```
+
+- oppure abilita gli script per il solo utente corrente (non serve
+  l'amministratore), poi riapri PowerShell:
+
+  ```powershell
+  Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+  ```
+
+  `RemoteSigned` consente gli script locali e richiede la firma solo per quelli
+  scaricati da internet. Se un criterio aziendale impedisce la modifica, resta
+  valida la prima strada.
+
+**`npm error code ENOENT ... Could not read package.json`**
+
+Il comando e' stato lanciato fuori dalla cartella del progetto: entra prima con
+`cd` nella cartella che contiene `package.json`.
+
+**`npm run emulators` si ferma con un errore su Java**
+
+Gli emulatori Firestore e Storage girano sulla JVM: installa Java con
+`winget install Microsoft.OpenJDK.21` e riapri il terminale.
+
+**`node` o `npm` non riconosciuti dopo l'installazione**
+
+Il PATH viene letto all'avvio del terminale: chiudi e riapri la finestra. Se non
+basta, verifica che `C:\Program Files\nodejs\` sia nella variabile PATH.
+
+---
+
 ## Deploy su Railway
 
 L'app e' una SPA statica: Railway la compila e ne serve la cartella `dist/`,
