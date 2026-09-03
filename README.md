@@ -101,10 +101,10 @@ npm run dev:emulatori    # terminale 2: app su http://localhost:5173
 non serve creare ne' modificare alcun `.env`. Su Windows apri semplicemente due
 finestre del Prompt dei comandi, una per ciascun comando.
 
-**Prerequisiti**: oltre a Node serve **Java 11+**, richiesto dagli emulatori
-Firestore e Storage (`winget install Microsoft.OpenJDK.21` su Windows,
-`brew install openjdk` su macOS). Senza Java `npm run emulators` si ferma
-subito con un errore su Java.
+**Prerequisiti**: oltre a Node serve un **JDK 21 o superiore**, richiesto dagli
+emulatori Firestore e Storage (`winget install Microsoft.OpenJDK.21` su Windows,
+`brew install openjdk@21` su macOS). Le versioni di Java precedenti alla 21 non
+sono piu' supportate da firebase-tools 15.
 
 1. Apri http://localhost:5173 e scegli **Registrati**: nome, cognome, codice
    fiscale, e-mail e password.
@@ -284,10 +284,14 @@ Controlla con `dir node_modules\firebase-tools` (Windows) o
 `ls node_modules/firebase-tools`; se la cartella manca rilancia `npm install`
 dalla cartella del progetto e leggi le ultime righe dell'output.
 
-**`npm run emulators` si ferma con un errore su Java**
+**`firebase-tools no longer supports Java version before 21`**
 
-Gli emulatori Firestore e Storage girano sulla JVM: installa Java con
-`winget install Microsoft.OpenJDK.21` e riapri il terminale.
+Gli emulatori Firestore e Storage girano sulla JVM e firebase-tools 15 richiede
+un **JDK 21+**: installalo con `winget install Microsoft.OpenJDK.21` e riapri il
+terminale. Se `java -version` continua a mostrare una versione precedente, hai
+un vecchio Java che ha la precedenza nel PATH: sposta piu' in alto la voce del
+nuovo JDK nelle variabili d'ambiente, oppure imposta `JAVA_HOME` sulla sua
+cartella.
 
 **`node` o `npm` non riconosciuti dopo l'installazione**
 
